@@ -6,6 +6,7 @@ import ServiceApi from "../network/ServiceApi";
 import BotConstants from "../shared/BotConstants";
 import GeneralDtoResp from "../dto/response/GeneralDtoResp";
 import { NetworkUtils } from "../util/NetworkUtils";
+import WhatsappUtils from "../util/WhatsappUtils";
 
 
 export default class WspMessageService{
@@ -26,7 +27,6 @@ export default class WspMessageService{
 
         return returned != undefined ? returned : "MESSAGETYPE NOT FOUND";
 
-
     }
 
 
@@ -43,6 +43,8 @@ export default class WspMessageService{
         UtilService.log("Registrando mensaje")
         let isOk : Boolean = true;
 
+        var groupId:string = WhatsappUtils.getGroupId(wspMessage); 
+
         try {
             const request:WspDtoReq = {
                 message: wspMessage.body,
@@ -51,13 +53,13 @@ export default class WspMessageService{
                 idWhatsAppFile: 0,
                 idContactFrom: {
                     contactName: wspMessage.author === undefined ? "": wspMessage.author,
-                    phoneNumber: UtilService.cleanWhatsappPhone(wspMessage.from)
+                    phoneNumber:groupId === ""? UtilService.cleanWhatsappPhone(wspMessage.from) : UtilService.cleanWhatsappPhone(wspMessage.author!)
                 },
                 idContactTo: {
                     contactName: wspMessage.author === undefined ? "": wspMessage.author,
                     phoneNumber: UtilService.cleanWhatsappPhone(wspMessage.to)
                 },
-                groupId: "",
+                groupId: groupId,
                 idTypeMessage: this.analyzeMessageType(wspMessage)
             };
     

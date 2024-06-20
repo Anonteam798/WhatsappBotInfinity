@@ -1,4 +1,5 @@
 import { MessageTypes } from "whatsapp-web.js";
+import { UtilService } from "../util/Util";
 
 
 
@@ -17,9 +18,12 @@ export default
 
     public static seedTypes():void{
 
-        this.MESSAGE_TYPES_CONF.set("chat",MessageTypes.TEXT);
-        this.MESSAGE_TYPES_CONF.set("video",MessageTypes.VIDEO);
+        this.MESSAGE_TYPES_CONF.set("chat","TEXT");
+        this.MESSAGE_TYPES_CONF.set("video","VIDEO");
         //this.MESSAGE_TYPES_CONF.set("chat",MessageTypes.TEXT);
+
+
+        UtilService.log("MESSAGE_TYPES_CONF inicializado con: " + this.MESSAGE_TYPES_CONF.size + " items");
 
 
     }

@@ -1,3 +1,4 @@
+import { MessageTypes } from "whatsapp-web.js";
 import { BotController } from "./controller/BotController";
 import BotConstants from "./shared/BotConstants";
 
