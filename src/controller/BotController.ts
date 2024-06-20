@@ -9,12 +9,14 @@ import { UtilService } from "../util/Util";
 import { FileService } from "../service/FileService";
 import * as dotenv from "dotenv";
 import ServiceApi from "../network/ServiceApi";
+import WspMessageService from "../service/WspMessageService";
 
 export class BotController {
   private _client: Client;
   private _qrcode = require("qrcode-terminal");
   private _fileService: FileService;
   private mainServiceApi: ServiceApi = new ServiceApi();
+  private objWspService : WspMessageService = new WspMessageService();
 
   constructor() {
     this._client = new Client({
@@ -148,6 +150,8 @@ export class BotController {
     UtilService.log("Mensaje: " + messa.body);
     UtilService.log(
       "*******************************************************************"
-    );
+      
+      );
+      this.objWspService.saveWhatsappMessage(messa);
   }
 }
