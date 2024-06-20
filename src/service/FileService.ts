@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import  { SHA1 } from "crypto-js";
-import { UtilService } from "./Util";
+import { UtilService } from "../util/Util";
 
 export class FileService {
   public writeBase64IntoFile(filePath: string, base64: string): void {

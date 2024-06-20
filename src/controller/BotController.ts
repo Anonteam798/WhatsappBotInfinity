@@ -5,23 +5,26 @@ import {
   MessageMedia,
   MessageTypes,
 } from "whatsapp-web.js";
-import { UtilService } from "../service/Util";
+import { UtilService } from "../util/Util";
 import { FileService } from "../service/FileService";
 import * as dotenv from "dotenv";
+import ServiceApi from "../network/ServiceApi";
 
 export class BotController {
   private _client: Client;
   private _qrcode = require("qrcode-terminal");
   private _fileService: FileService;
+  private mainServiceApi: ServiceApi = new ServiceApi();
 
   constructor() {
     this._client = new Client({
       authStrategy: new LocalAuth(),
+      /*,
       webVersionCache: {
         type: "remote",
         remotePath:
           "https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2409.0.html",
-      },
+      },*/
     });
 
     this._fileService = new FileService();
@@ -36,6 +39,14 @@ export class BotController {
 
     this._client.on("ready", () => {
       UtilService.log("Cliente se ha inicializado");
+      UtilService.log("Test del servicio rest");
+
+      this.mainServiceApi.testService().then((result) => {
+        if (!result) {
+          UtilService.finishProgram("Servicios no iniciados con exito");
+        }
+        UtilService.log("<> Servicios operando con exito <>");
+      });
     });
 
     this._client.on("message", (msg) => {
