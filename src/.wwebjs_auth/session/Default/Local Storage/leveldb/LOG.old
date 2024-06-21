@@ -1,12 +1,3 @@
-2024/06/20-11:36:37.959 931c Reusing MANIFEST C:\Users\fquintana\Desktop\UTP-Prog\whatsapp-own\src\.wwebjs_auth\session\Default\Local Storage\leveldb/MANIFEST-000001
-2024/06/20-11:36:37.959 931c Recovering log #3
-2024/06/20-11:36:37.959 931c Reusing old log C:\Users\fquintana\Desktop\UTP-Prog\whatsapp-own\src\.wwebjs_auth\session\Default\Local Storage\leveldb/000003.log 
-2024/06/20-12:26:49.908 c570 Level-0 table #5: started
-2024/06/20-12:26:49.914 c570 Level-0 table #5: 18278 bytes OK
-2024/06/20-12:26:49.921 c570 Delete type=0 #3
-2024/06/20-15:17:01.374 6164 Level-0 table #7: started
-2024/06/20-15:17:01.383 6164 Level-0 table #7: 16679 bytes OK
-2024/06/20-15:17:01.399 6164 Delete type=0 #4
-2024/06/20-17:45:11.334 b290 Level-0 table #9: started
-2024/06/20-17:45:11.338 b290 Level-0 table #9: 16685 bytes OK
-2024/06/20-17:45:11.344 b290 Delete type=0 #6
+2024/06/21-00:59:29.855 3ab0 Reusing MANIFEST C:\Users\LuisQM\Desktop\bots\WhatsappBotInfinity\src\.wwebjs_auth\session\Default\Local Storage\leveldb/MANIFEST-000001
+2024/06/21-00:59:29.855 3ab0 Recovering log #4
+2024/06/21-00:59:29.856 3ab0 Reusing old log C:\Users\LuisQM\Desktop\bots\WhatsappBotInfinity\src\.wwebjs_auth\session\Default\Local Storage\leveldb/000004.log 

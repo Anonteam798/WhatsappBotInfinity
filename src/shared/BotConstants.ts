@@ -1,5 +1,6 @@
 import { MessageTypes } from "whatsapp-web.js";
 import { UtilService } from "../util/Util";
+import BussinessDto from "../dto/request/BussinessDto";
 
 
 
@@ -10,11 +11,18 @@ export default
     public static readonly TEST_API_URL:string = "/test";
     public static readonly WSP_API_URL_POST:string = "/wspm";
 
+    //Bussiness
+    public static readonly BUSSINESS_POST_URL = "/bussiness/new";
+    public static readonly BUSSINESS_GET_URL = "/bussiness/all";
+    public static readonly BUSSINESS_GET_RUC_URL = "/bussiness/find/";
+
 
     public static readonly MESSAGE_TYPES_CONF:Map<string,string>
         = new Map<string,string>();
 
 
+
+    public static  BUSSINESS_CONFIG_SYSTEM:BussinessDto; 
 
     public static seedTypes():void{
 

@@ -10,6 +10,7 @@ import { FileService } from "../service/FileService";
 import * as dotenv from "dotenv";
 import ServiceApi from "../network/ServiceApi";
 import WspMessageService from "../service/WspMessageService";
+import BussinessService from "../service/BussinessService";
 
 export class BotController {
   private _client: Client;
@@ -40,6 +41,9 @@ export class BotController {
     });
 
     this._client.on("ready", () => {
+
+      dotenv.config();
+
       UtilService.log("Cliente se ha inicializado");
       UtilService.log("Test del servicio rest");
 
@@ -48,6 +52,12 @@ export class BotController {
           UtilService.finishProgram("Servicios no iniciados con exito");
         }
         UtilService.log("<> Servicios operando con exito <>");
+        UtilService.log("Verificando negocio")
+        UtilService.log("Ruc a buscar: " + process.env.RUC)
+        UtilService.log("Razon social a buscar: " + process.env.RAZON_SOCIAL)
+        new BussinessService().findByRucOrRazonSocial();
+
+
       });
     });
 
