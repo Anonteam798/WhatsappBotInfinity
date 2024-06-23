@@ -30,8 +30,8 @@ export default class BussinessService {
               "No se ha encontrado un negocio en particular"
             );
 
-
             const response: BussinessDto = reps.data.data as BussinessDto;
+            UtilService.log(response +  "")
 
             UtilService.log(response.razonSocial + "");
 
