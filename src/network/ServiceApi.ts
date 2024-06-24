@@ -6,6 +6,8 @@ import BotConstants from "../shared/BotConstants";
 import { UtilService } from "../util/Util";
 import { NetworkUtils } from "../util/NetworkUtils";
 
+import {config} from  "dotenv" 
+
 class ServiceApi {
   private objAxios:AxiosInstance|null = null ;
   private static objInstanceAxios:AxiosInstance|null = null ;
@@ -57,3 +59,4 @@ class ServiceApi {
 export default ServiceApi;
 
 //new ServiceApi().testService();
+

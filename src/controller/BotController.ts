@@ -7,17 +7,18 @@ import {
 } from "whatsapp-web.js";
 import { UtilService } from "../util/Util";
 import { FileService } from "../service/FileService";
-import * as dotenv from "dotenv";
 import ServiceApi from "../network/ServiceApi";
 import WspMessageService from "../service/WspMessageService";
 import BussinessService from "../service/BussinessService";
+import BotConstants from "../shared/BotConstants";
 
+const path = require("path"); //  para el tema de rutas en los archivos
 export class BotController {
   private _client: Client;
   private _qrcode = require("qrcode-terminal");
   private _fileService: FileService;
   private mainServiceApi: ServiceApi = new ServiceApi();
-  private objWspService : WspMessageService = new WspMessageService();
+  private objWspService: WspMessageService = new WspMessageService();
 
   constructor() {
     this._client = new Client({
@@ -31,7 +32,6 @@ export class BotController {
     });
 
     this._fileService = new FileService();
-    dotenv.config();
   }
 
   initListener(): void {
@@ -41,9 +41,6 @@ export class BotController {
     });
 
     this._client.on("ready", () => {
-
-      dotenv.config();
-
       UtilService.log("Cliente se ha inicializado");
       UtilService.log("Test del servicio rest");
 
@@ -52,12 +49,7 @@ export class BotController {
           UtilService.finishProgram("Servicios no iniciados con exito");
         }
         UtilService.log("<> Servicios operando con exito <>");
-        UtilService.log("Verificando negocio")
-        UtilService.log("Ruc a buscar: " + process.env.RUC)
-        UtilService.log("Razon social a buscar: " + process.env.RAZON_SOCIAL)
         new BussinessService().findByRucOrRazonSocial();
-
-
       });
     });
 
@@ -83,33 +75,79 @@ export class BotController {
     //Aplica para lo que es solo mensajes de texto
 
     //Aplica solo si tiene contenido por descargar
-    if (message.hasMedia) {
-      var fullPath: string = process.env.DIRECTORY_PATH!;
-      //console.log(MessageTypes.IMAGE)
-      switch (message.type) {
-        case "image":
-          UtilService.log("Se detecto una imagen, guardando");
-          fullPath += UtilService.formatDate(new Date()) + "_file.jpg";
-          break;
+    if (message.hasMedia && message.type !== MessageTypes.STICKER) {
+      //Se omite stickers
+      //var fullPath: string = process.env.DIRECTORY_PATH!;
 
-        case "video":
-          UtilService.log("Se detecto un video, guardando");
-          fullPath += UtilService.formatDate(new Date()) + "_file.mp4";
-          break;
-
-        case "document":
-          fullPath += UtilService.formatDate(new Date()) + ".docx";
-          break;
-
-        case "ptt":
-          fullPath += UtilService.formatDate(new Date()) + ".ogg";
-          break;
+      if (BotConstants.BUSSINESS_CONFIG_SYSTEM === undefined) {
+        UtilService.finishProgram(
+          "Error de inicio, no se ha establecido un directorio local para la multimedia Whatsapp"
+        );
       }
-
       message.downloadMedia().then((meMedia) => {
         this.showMediaDetails(meMedia);
-        this._fileService.writeBase64IntoFile(fullPath, meMedia.data);
+
+        var fullPath: string =
+          BotConstants.BUSSINESS_CONFIG_SYSTEM.configurationCollection!![0]
+            .mainLocalDirectory!!;
+
+        var currentDateCreation: string = UtilService.formatDate(new Date());
+        var fileName: string = "";
+
+        switch (message.type) {
+          case "image":
+            UtilService.log("Se detecto una imagen, guardando");
+            fileName = currentDateCreation + "_file.jpg";
+            break;
+
+          case "video":
+            UtilService.log("Se detecto un video, guardando");
+            fileName = currentDateCreation + "_file.mp4";
+            break;
+          /*
+          case "document":
+            fileName +=
+              currentDateCreation +
+              this._fileService.determinateExtension(
+                meMedia.filename === undefined ? "" : meMedia.filename!!
+              );
+            break;
+
+            */
+          case "ptt":
+            fileName = currentDateCreation + ".ogg";
+            break;
+
+          case "audio":
+            fileName = currentDateCreation + ".mp3";
+            break;
+        }
+
+        if (meMedia.filename == undefined) {
+          fileName = meMedia.filename!!;
+        }
+
+        UtilService.log("fffff -> Nombre del archivo a guardar: " + fileName);
+
+        fullPath = path.join(fullPath, fileName);
+
+        const isSaved: Boolean = this._fileService.writeBase64IntoFile(
+          fullPath,
+          meMedia.data
+        );
+
+        if (isSaved) {
+          this.objWspService
+            .saveMediaMessage(message, fullPath, this._fileService)
+            .then((r) => {
+              UtilService.log(`Respuesta del saveMediaMessage: ${r}`);
+              UtilService.log("Guardando mensaje");
+              this.objWspService.saveWhatsappMessage(message, r);
+            });
+        }
       });
+    } else {
+      this.objWspService.saveWhatsappMessage(message, undefined);
     }
   }
 
@@ -130,8 +168,9 @@ export class BotController {
     UtilService.log(
       "*******************************************************************"
     );
+    const nName = mess.filename ?? {};
     UtilService.log("Detalles del archivo: ");
-    UtilService.log("Nombre del archivo: " + mess.filename);
+    UtilService.log("Nombre del archivo: " + nName ?? "Sin nombre");
     UtilService.log("Peso del archivo: " + mess.filesize);
     UtilService.log("MimeType: " + mess.mimetype);
 
@@ -160,8 +199,6 @@ export class BotController {
     UtilService.log("Mensaje: " + messa.body);
     UtilService.log(
       "*******************************************************************"
-      
-      );
-      this.objWspService.saveWhatsappMessage(messa);
+    );
   }
 }

@@ -8,6 +8,9 @@
 # Log file
 *.log
 
+.wwebjs_auth/*
+.wwebjs_cache/*
+
 # BlueJ files
 *.ctxt
 
